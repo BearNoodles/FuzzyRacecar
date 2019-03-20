@@ -13,7 +13,7 @@ public class LineScript : MonoBehaviour {
     {
         moveSpeed = 0.03f;
         minX = -3.1f;
-        maxX = 4.2f;
+        maxX = 4.3f;
 	}
 	
 	// Update is called once per frame
