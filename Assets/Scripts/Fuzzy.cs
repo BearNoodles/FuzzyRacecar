@@ -4,31 +4,124 @@ using UnityEngine;
 using FLS;
 using FLS.Rules;
 
+
 public class Fuzzy : MonoBehaviour {
 
-	// Use this for initialization
-	void Start ()
+    CarScript car;
+    LineScript line;
+    double linePosX;
+    double carPosX;
+    double velocity;
+    double steeringValue;
+    double maxCarVel;
+    IFuzzyEngine fuzzyEngine;
+
+    // Use this for initialization
+    void Start ()
     {
-        var water = new LinguisticVariable("Water");
-        var cold = water.MembershipFunctions.AddTrapezoid("Cold", 0, 0, 20, 40);
-        var warm = water.MembershipFunctions.AddTriangle("Warm", 30, 50, 70);
-        var hot = water.MembershipFunctions.AddTrapezoid("Hot", 50, 80, 100, 100);
+        car = GameObject.FindGameObjectWithTag("Car").GetComponent<CarScript>();
+        line = GameObject.FindGameObjectWithTag("Line").GetComponent<LineScript>();
+        maxCarVel = car.GetMaxVelocity();
+        steeringValue = car.GetSteeringScale();
 
-        var power = new LinguisticVariable("Power");
-        var low = power.MembershipFunctions.AddTriangle("Low", 0, 25, 50);
-        var high = power.MembershipFunctions.AddTriangle("High", 25, 50, 75);
+        //var linePos = new LinguisticVariable("Line Position");
+        //var left = linePos.MembershipFunctions.AddTrapezoid("Left", 0, 0, 20, 40);
+        //var middle = linePos.MembershipFunctions.AddTriangle("Middle", 30, 50, 70);
+        //var right = linePos.MembershipFunctions.AddTrapezoid("Right", 50, 80, 100, 100);
 
-        IFuzzyEngine fuzzyEngine = new FuzzyEngineFactory().Default();
 
-        var rule1 = Rule.If(water.Is(cold).Or(water.Is(warm))).Then(power.Is(high));
-        var rule2 = Rule.If(water.Is(hot)).Then(power.Is(low));
-        fuzzyEngine.Rules.Add(rule1, rule2);
 
-        var result = fuzzyEngine.Defuzzify(new { water = 60 });
+        
+        var carPosToLine = new LinguisticVariable("CarPosition");
+        var carFarLeft = carPosToLine.MembershipFunctions.AddTrapezoid("FarLeft", -3.0, -3.0, -1.5, -1.0);
+        var carLeft = carPosToLine.MembershipFunctions.AddTriangle("Left", -1.5, -0.75, 0.0);
+        var carCentre = carPosToLine.MembershipFunctions.AddTriangle("Centre", -0.75, 0.0, 0.75);
+        var carRight = carPosToLine.MembershipFunctions.AddTriangle("Right", 0.0, 0.75, 1.5);
+        var carFarRight = carPosToLine.MembershipFunctions.AddTrapezoid("FarRight", 1.0, 1.5, 3.0, 3.0);
+
+        //mems.Add(carPosToLine);
+
+        var carVel = new LinguisticVariable("CarVelocity");
+        var velFastLeft = carVel.MembershipFunctions.AddTrapezoid("FastLeft", -maxCarVel, -maxCarVel, -maxCarVel / 2.0, -maxCarVel / 3.0);
+        var velLeft = carVel.MembershipFunctions.AddTriangle("Left", -maxCarVel / 2.0, -maxCarVel / 4.0, 0.0);
+        var velStill = carVel.MembershipFunctions.AddTriangle("Still", -maxCarVel / 4.0, 0.0, maxCarVel / 4.0);
+        var velRight = carVel.MembershipFunctions.AddTriangle("Right", 0.0, maxCarVel / 4.0, maxCarVel / 2.0);
+        var velFastRight = carVel.MembershipFunctions.AddTrapezoid("FastRight", maxCarVel / 3.0, maxCarVel / 2.0, maxCarVel, maxCarVel);
+
+        //mems.Add(carVel);
+
+        var carSteering = new LinguisticVariable("CarSteering");
+        var steerHardLeft = carSteering.MembershipFunctions.AddTriangle("SteerHardLeft", -2.0 * steeringValue, -2.0 * steeringValue, -0.5 * steeringValue);
+        var steerLeft = carSteering.MembershipFunctions.AddTriangle("SteerLeft", -steeringValue, -0.5 * steeringValue, 0.0);
+        var noSteering = carSteering.MembershipFunctions.AddTriangle("NoSteering", -0.5 * steeringValue, 0.0, 0.5 * steeringValue);
+        var steerRight = carSteering.MembershipFunctions.AddTriangle("SteerRight", 0.0, 0.5 * steeringValue, steeringValue);
+        var steerHardRight = carSteering.MembershipFunctions.AddTriangle("SteerHardRight", 0.5 * steeringValue, 2.0 * steeringValue, 2.0 * steeringValue);
+
+        //
+        //IFuzzyEngine fuzzyEngine = new FuzzyEngineFactory().Default();
+        fuzzyEngine = new FuzzyEngineFactory().Default();
+        //fuzzyEngine = new FuzzyEngineFactory().Create(new MoMDefuzzification());
+
+        var rule1 = Rule.If(carPosToLine.Is(carFarLeft).And(carVel.Is(velFastLeft))).Then(carSteering.Is(steerHardRight));
+        var rule2 = Rule.If(carPosToLine.Is(carFarLeft).And(carVel.Is(velLeft))).Then(carSteering.Is(steerHardRight));
+        var rule3 = Rule.If(carPosToLine.Is(carFarLeft).And(carVel.Is(velStill))).Then(carSteering.Is(steerHardRight));
+        var rule4 = Rule.If(carPosToLine.Is(carFarLeft).And(carVel.Is(velRight))).Then(carSteering.Is(steerHardRight));
+        var rule5 = Rule.If(carPosToLine.Is(carFarLeft).And(carVel.Is(velFastRight))).Then(carSteering.Is(steerRight));
+
+        var rule6 = Rule.If(carPosToLine.Is(carLeft).And(carVel.Is(velFastLeft))).Then(carSteering.Is(steerHardRight));
+        var rule7 = Rule.If(carPosToLine.Is(carLeft).And(carVel.Is(velLeft))).Then(carSteering.Is(steerHardRight));
+        var rule8 = Rule.If(carPosToLine.Is(carLeft).And(carVel.Is(velStill))).Then(carSteering.Is(steerRight));
+        var rule9 = Rule.If(carPosToLine.Is(carLeft).And(carVel.Is(velRight))).Then(carSteering.Is(noSteering));
+        var rule10 = Rule.If(carPosToLine.Is(carLeft).And(carVel.Is(velFastRight))).Then(carSteering.Is(noSteering));
+
+        var rule11 = Rule.If(carPosToLine.Is(carCentre).And(carVel.Is(velFastLeft))).Then(carSteering.Is(steerHardRight));
+        var rule12 = Rule.If(carPosToLine.Is(carCentre).And(carVel.Is(velLeft))).Then(carSteering.Is(steerRight));
+        var rule13 = Rule.If(carPosToLine.Is(carCentre).And(carVel.Is(velStill))).Then(carSteering.Is(noSteering));
+        var rule14 = Rule.If(carPosToLine.Is(carCentre).And(carVel.Is(velRight))).Then(carSteering.Is(steerLeft));
+        var rule15 = Rule.If(carPosToLine.Is(carCentre).And(carVel.Is(velFastRight))).Then(carSteering.Is(steerHardLeft));
+
+        var rule16 = Rule.If(carPosToLine.Is(carRight).And(carVel.Is(velFastLeft))).Then(carSteering.Is(noSteering));
+        var rule17 = Rule.If(carPosToLine.Is(carRight).And(carVel.Is(velLeft))).Then(carSteering.Is(noSteering));
+        var rule18 = Rule.If(carPosToLine.Is(carRight).And(carVel.Is(velStill))).Then(carSteering.Is(steerLeft));
+        var rule19 = Rule.If(carPosToLine.Is(carRight).And(carVel.Is(velRight))).Then(carSteering.Is(steerHardLeft));
+        var rule20 = Rule.If(carPosToLine.Is(carRight).And(carVel.Is(velFastRight))).Then(carSteering.Is(steerHardLeft));
+
+        var rule21 = Rule.If(carPosToLine.Is(carFarRight).And(carVel.Is(velFastLeft))).Then(carSteering.Is(steerLeft));
+        var rule22 = Rule.If(carPosToLine.Is(carFarRight).And(carVel.Is(velLeft))).Then(carSteering.Is(steerHardLeft));
+        var rule23 = Rule.If(carPosToLine.Is(carFarRight).And(carVel.Is(velStill))).Then(carSteering.Is(steerHardLeft));
+        var rule24 = Rule.If(carPosToLine.Is(carFarRight).And(carVel.Is(velRight))).Then(carSteering.Is(steerHardLeft));
+        var rule25 = Rule.If(carPosToLine.Is(carFarRight).And(carVel.Is(velFastRight))).Then(carSteering.Is(steerHardLeft));
+
+        fuzzyEngine.Rules.Add(rule1, rule2, rule3, rule4, rule5, rule6, rule7, rule8, rule9, rule10, rule11, rule12, rule13,
+                              rule14, rule15, rule16, rule17, rule18, rule19, rule20, rule21, rule22, rule23, rule24, rule25);
+        
     }
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+
+    // Update is called once per frame
+    void Update()
+    {
+        linePosX = line.GetPositionX();
+        carPosX = car.GetPositionX();
+        velocity = car.GetVelocityX();
+        double dist = carPosX - linePosX;
+
+
+        //Debug.Log("linex" + linePosX);
+        //Debug.Log("carx" + carPosX);
+        Debug.Log("dist " + dist);
+        Debug.Log("vel " + velocity);
+        //Debug.Log("scale " + steeringValue);
+        //Debug.Log("maxvel " + maxCarVel);
+
+        //var result = fuzzyEngine.Defuzzify(new { carPosToLine = (double)(carPosX - linePosX), carVel = (double)velocity });
+
+        var result = fuzzyEngine.Defuzzify(new { CarPosition = dist, CarVelocity = velocity });
+        
+
+        Debug.Log("result " + (double)result);
+
+        car.SetSteering((float)result);
+
+        
+    }
 }

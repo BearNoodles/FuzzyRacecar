@@ -13,8 +13,8 @@ public class LineScript : MonoBehaviour {
 	void Start ()
     {
         moveSpeed = 0.03f;
-        minX = -3.1f;
-        maxX = 4.3f;
+        minX = -1.5f;
+        maxX = 1.5f;
 	}
 	
 	// Update is called once per frame
@@ -39,5 +39,10 @@ public class LineScript : MonoBehaviour {
             GetComponent<LineRenderer>().SetPosition(0, newPos0);
             GetComponent<LineRenderer>().SetPosition(1, newPos1);
         }
+    }
+
+    public float GetPositionX()
+    {
+        return GetComponent<LineRenderer>().GetPosition(0).x;
     }
 }
