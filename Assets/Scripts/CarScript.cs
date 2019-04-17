@@ -17,13 +17,13 @@ public class CarScript : MonoBehaviour {
 	void Awake ()
     {
         velocity = 0;
-        acceleration = 0;
-        steeringScale = 0.003f;
+        acceleration = 0.0f;
+        steeringScale = 0.001f;
         minPos = -1.5f;
         maxPos = 1.5f;
 
-        maxVelocity = 0.06f;
-
+        maxVelocity = 0.03f;
+        //
 	}
 	
 	// Update is called once per frame
@@ -31,9 +31,9 @@ public class CarScript : MonoBehaviour {
     {
         UpdatePosition();
         velocity += acceleration;
-
+        
         //Debug.Log("velocity " + velocity);
-        //Debug.Log("acceleration " + acceleration);
+        Debug.Log("acceleration " + acceleration * 100000);
 
         //if (Input.GetKeyDown(KeyCode.A))
         //{
@@ -66,8 +66,8 @@ public class CarScript : MonoBehaviour {
         }
         else if(transform.position.x > maxPos && velocity > 0)
         {
-            velocity = 0;
             //acceleration = 0;
+            velocity = 0;
             return;
         }
 
@@ -75,7 +75,7 @@ public class CarScript : MonoBehaviour {
         {
             velocity = maxVelocity;
         }
-
+        
         else if (velocity < -maxVelocity)
         {
             velocity = -maxVelocity;
