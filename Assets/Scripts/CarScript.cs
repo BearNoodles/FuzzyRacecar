@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CarScript : MonoBehaviour {
 
@@ -13,27 +14,38 @@ public class CarScript : MonoBehaviour {
 
     float minPos, maxPos;
 
+    Text inputPosition;
+    Text inputVelocity;
+
+    bool isPaused;
+
 	// Use this for initialization
 	void Awake ()
     {
         velocity = 0;
         acceleration = 0.0f;
-        steeringScale = 0.001f;
+        steeringScale = 0.003f;
         minPos = -1.5f;
         maxPos = 1.5f;
 
         maxVelocity = 0.03f;
-        //
+
+        inputPosition = GameObject.FindGameObjectWithTag("FuzzyCarPositionInputText").GetComponent<Text>();
+        inputVelocity = GameObject.FindGameObjectWithTag("FuzzyCarVelocityInputText").GetComponent<Text>();
 	}
 	
 	// Update is called once per frame
 	void Update ()
     {
+        if(isPaused)
+        {
+            return;
+        }
         UpdatePosition();
         velocity += acceleration;
         
         //Debug.Log("velocity " + velocity);
-        Debug.Log("acceleration " + acceleration * 100000);
+        //Debug.Log("acceleration " + acceleration * 100000);
 
         //if (Input.GetKeyDown(KeyCode.A))
         //{
@@ -106,5 +118,21 @@ public class CarScript : MonoBehaviour {
     public void SetSteering(float accel)
     {
         acceleration = accel;
+    }
+    public void Pause()
+    {
+        isPaused = !isPaused;
+    }
+
+    public void SetPositionXString()
+    {
+        float pos = float.Parse(inputPosition.text);
+        Vector2 newPos = new Vector2(pos, transform.position.y);
+        transform.position = newPos;
+    }
+    public void SetVelocityXString()
+    {
+        float vel = float.Parse(inputVelocity.text);
+        velocity = vel;
     }
 }

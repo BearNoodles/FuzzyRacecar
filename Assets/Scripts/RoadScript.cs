@@ -27,8 +27,8 @@ public class RoadScript : MonoBehaviour {
         roadPos = new Vector2[roadCount];
 
         roadPos[1] = Vector2.zero;
-        roadPos[0] = new Vector2(0, roadPos[1].y + (roadSprite.bounds.size.y * 1.5f));
-        roadPos[2] = new Vector2(0, roadPos[1].y - (roadSprite.bounds.size.y * 1.5f));
+        roadPos[0] = new Vector2(0, roadPos[1].y + (roadSprite.bounds.size.y * 1.0f));
+        roadPos[2] = new Vector2(0, roadPos[1].y - (roadSprite.bounds.size.y * 1.0f));
 
 
         for (int i = 0; i < roadCount; i++)
@@ -70,7 +70,7 @@ public class RoadScript : MonoBehaviour {
         {
             nextRoad = 0;
         }
-        roadPos[roadNum] = new Vector2(roads[roadNum].transform.position.x, roads[nextRoad].transform.position.y + (roadSprite.bounds.size.y * 1.5f));
+        roadPos[roadNum] = new Vector2(roads[roadNum].transform.position.x, roads[nextRoad].transform.position.y + (roadSprite.bounds.size.y * 1.0f));
         roads[roadNum].transform.position = roadPos[roadNum];
     }
 }

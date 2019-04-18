@@ -3,10 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using FLS;
 using FLS.Rules;
+using UnityEngine.UI;
 
 
 public class Fuzzy : MonoBehaviour {
 
+    GameObject carPositionInputField;
+    GameObject linePositionInputField;
+    GameObject velocityInputField;
+    Text steeringText;
     CarScript car;
     LineScript line;
     double linePosX;
@@ -16,25 +21,41 @@ public class Fuzzy : MonoBehaviour {
     double maxCarVel;
     IFuzzyEngine fuzzyEngine;
 
+    bool isPaused = false;
+
     double result;
 
     // Use this for initialization
     void Start ()
     {
-        car = GameObject.FindGameObjectWithTag("Car").GetComponent<CarScript>();
+        //car = GameObject.FindGameObjectWithTag("Car").GetComponent<CarScript>();
+        car = GetComponent<CarScript>();
         line = GameObject.FindGameObjectWithTag("Line").GetComponent<LineScript>();
         maxCarVel = car.GetMaxVelocity();
-        Debug.Log(maxCarVel);
+        //Debug.Log(maxCarVel);
         steeringValue = car.GetSteeringScale();
+
+        carPositionInputField = GameObject.FindGameObjectWithTag("FuzzyCarPositionInputField");
+        linePositionInputField = GameObject.FindGameObjectWithTag("FuzzyLinePositionInputField");
+        velocityInputField = GameObject.FindGameObjectWithTag("FuzzyVelocityInputField");
+        steeringText = GameObject.FindGameObjectWithTag("FuzzySteeringText").GetComponent<Text>();
 
         //var linePos = new LinguisticVariable("Line Position");
         //var left = linePos.MembershipFunctions.AddTrapezoid("Left", 0, 0, 20, 40);
         //var middle = linePos.MembershipFunctions.AddTriangle("Middle", 30, 50, 70);
         //var right = linePos.MembershipFunctions.AddTrapezoid("Right", 50, 80, 100, 100);
-
-
-
         
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        linePosX = line.GetPositionX();
+        carPosX = car.GetPositionX();
+        velocity = car.GetVelocityX();
+        double dist = carPosX - linePosX;
+
+
         var carPosToLine = new LinguisticVariable("CarPosition");
         var carFarLeft = carPosToLine.MembershipFunctions.AddTrapezoid("FarLeft", -3.0, -3.0, -2.0, -1.0);
         var carLeft = carPosToLine.MembershipFunctions.AddTriangle("Left", -2.0, -1.0, 0.0);
@@ -97,18 +118,6 @@ public class Fuzzy : MonoBehaviour {
 
         fuzzyEngine.Rules.Add(rule1, rule2, rule3, rule4, rule5, rule6, rule7, rule8, rule9, rule10, rule11, rule12, rule13,
                               rule14, rule15, rule16, rule17, rule18, rule19, rule20, rule21, rule22, rule23, rule24, rule25);
-        
-        
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        linePosX = line.GetPositionX();
-        carPosX = car.GetPositionX();
-        velocity = car.GetVelocityX();
-        double dist = carPosX - linePosX;
 
         //Debug.Log(result);
         //Debug.Log("linex" + linePosX);
@@ -124,8 +133,22 @@ public class Fuzzy : MonoBehaviour {
 
         //Debug.Log("result " + (double)result);
 
-        car.SetSteering((float)result);
+        if(!isPaused)
+        {
+            car.SetSteering((float)result);
+        }
+        
+        steeringText.text = ("Steering: " + ((Mathf.Round((float)result * 1000000) / 1000000) * 1000000) + " E-6");
 
         
+    }
+
+    public void PauseToggle()
+    {
+        isPaused = !isPaused;
+        //linePositionInputField.SetActive(isPaused);
+        //carPositionInputField.SetActive(isPaused);
+        //velocityInputField.SetActive(isPaused);
+        car.Pause();
     }
 }

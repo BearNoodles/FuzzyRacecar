@@ -6,6 +6,15 @@ TagManager:
   tags:
   - Line
   - Car
+  - FuzzySteeringText
+  - CarPositionInputText
+  - LinePositionInputText
+  - FuzzyVelocityInputField
+  - FuzzyCarPositionInputField
+  - FuzzyLinePositionInputField
+  - FuzzyCarPositionInputText
+  - FuzzyLinePositionInputText
+  - FuzzyCarVelocityInputText
   layers:
   - Default
   - TransparentFX
