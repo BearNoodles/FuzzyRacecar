@@ -12,6 +12,7 @@ public class Fuzzy : MonoBehaviour {
     GameObject linePositionInputField;
     GameObject velocityInputField;
     Text steeringText;
+
     CarScript car;
     LineScript line;
     double linePosX;
@@ -57,11 +58,11 @@ public class Fuzzy : MonoBehaviour {
 
 
         var carPosToLine = new LinguisticVariable("CarPosition");
-        var carFarLeft = carPosToLine.MembershipFunctions.AddTrapezoid("FarLeft", -3.0, -3.0, -2.0, -1.0);
-        var carLeft = carPosToLine.MembershipFunctions.AddTriangle("Left", -2.0, -1.0, 0.0);
+        var carFarLeft = carPosToLine.MembershipFunctions.AddTrapezoid("FarLeft", -3.0, -3.0, -1.5, -0.75);
+        var carLeft = carPosToLine.MembershipFunctions.AddTriangle("Left", -1.0, -0.5, 0.0);
         var carCentre = carPosToLine.MembershipFunctions.AddTriangle("Centre", -1.0, 0.0, 1.0);
-        var carRight = carPosToLine.MembershipFunctions.AddTriangle("Right", 0.0, 1.0, 2.0);
-        var carFarRight = carPosToLine.MembershipFunctions.AddTrapezoid("FarRight", 1.0, 2.0, 3.0, 3.0);
+        var carRight = carPosToLine.MembershipFunctions.AddTriangle("Right", 0.0, 0.5, 1.0);
+        var carFarRight = carPosToLine.MembershipFunctions.AddTrapezoid("FarRight", 0.75, 1.5, 3.0, 3.0);
 
         //mems.Add(carPosToLine);
         //
@@ -88,15 +89,15 @@ public class Fuzzy : MonoBehaviour {
 
         var rule1 = Rule.If(carPosToLine.Is(carFarLeft).And(carVel.Is(velFastLeft))).Then(carSteering.Is(steerHardRight));
         var rule2 = Rule.If(carPosToLine.Is(carFarLeft).And(carVel.Is(velLeft))).Then(carSteering.Is(steerHardRight));
-        var rule3 = Rule.If(carPosToLine.Is(carFarLeft).And(carVel.Is(velStill))).Then(carSteering.Is(steerHardRight));
-        var rule4 = Rule.If(carPosToLine.Is(carFarLeft).And(carVel.Is(velRight))).Then(carSteering.Is(steerHardRight));
-        var rule5 = Rule.If(carPosToLine.Is(carFarLeft).And(carVel.Is(velFastRight))).Then(carSteering.Is(noSteering));
+        var rule3 = Rule.If(carPosToLine.Is(carFarLeft).And(carVel.Is(velStill))).Then(carSteering.Is(steerRight));
+        var rule4 = Rule.If(carPosToLine.Is(carFarLeft).And(carVel.Is(velRight))).Then(carSteering.Is(steerRight));
+        var rule5 = Rule.If(carPosToLine.Is(carFarLeft).And(carVel.Is(velFastRight))).Then(carSteering.Is(steerRight));
 
         var rule6 = Rule.If(carPosToLine.Is(carLeft).And(carVel.Is(velFastLeft))).Then(carSteering.Is(steerHardRight));
         var rule7 = Rule.If(carPosToLine.Is(carLeft).And(carVel.Is(velLeft))).Then(carSteering.Is(steerHardRight));
         var rule8 = Rule.If(carPosToLine.Is(carLeft).And(carVel.Is(velStill))).Then(carSteering.Is(steerRight));
         var rule9 = Rule.If(carPosToLine.Is(carLeft).And(carVel.Is(velRight))).Then(carSteering.Is(noSteering));
-        var rule10 = Rule.If(carPosToLine.Is(carLeft).And(carVel.Is(velFastRight))).Then(carSteering.Is(noSteering));
+        var rule10 = Rule.If(carPosToLine.Is(carLeft).And(carVel.Is(velFastRight))).Then(carSteering.Is(steerLeft));
 
         var rule11 = Rule.If(carPosToLine.Is(carCentre).And(carVel.Is(velFastLeft))).Then(carSteering.Is(steerHardRight));
         var rule12 = Rule.If(carPosToLine.Is(carCentre).And(carVel.Is(velLeft))).Then(carSteering.Is(steerRight));
@@ -104,14 +105,14 @@ public class Fuzzy : MonoBehaviour {
         var rule14 = Rule.If(carPosToLine.Is(carCentre).And(carVel.Is(velRight))).Then(carSteering.Is(steerLeft));
         var rule15 = Rule.If(carPosToLine.Is(carCentre).And(carVel.Is(velFastRight))).Then(carSteering.Is(steerHardLeft));
 
-        var rule16 = Rule.If(carPosToLine.Is(carRight).And(carVel.Is(velFastLeft))).Then(carSteering.Is(noSteering));
+        var rule16 = Rule.If(carPosToLine.Is(carRight).And(carVel.Is(velFastLeft))).Then(carSteering.Is(steerRight));
         var rule17 = Rule.If(carPosToLine.Is(carRight).And(carVel.Is(velLeft))).Then(carSteering.Is(noSteering));
         var rule18 = Rule.If(carPosToLine.Is(carRight).And(carVel.Is(velStill))).Then(carSteering.Is(steerLeft));
         var rule19 = Rule.If(carPosToLine.Is(carRight).And(carVel.Is(velRight))).Then(carSteering.Is(steerHardLeft));
         var rule20 = Rule.If(carPosToLine.Is(carRight).And(carVel.Is(velFastRight))).Then(carSteering.Is(steerHardLeft));
 
-        var rule21 = Rule.If(carPosToLine.Is(carFarRight).And(carVel.Is(velFastLeft))).Then(carSteering.Is(noSteering));
-        var rule22 = Rule.If(carPosToLine.Is(carFarRight).And(carVel.Is(velLeft))).Then(carSteering.Is(steerHardLeft));
+        var rule21 = Rule.If(carPosToLine.Is(carFarRight).And(carVel.Is(velFastLeft))).Then(carSteering.Is(steerLeft));
+        var rule22 = Rule.If(carPosToLine.Is(carFarRight).And(carVel.Is(velLeft))).Then(carSteering.Is(steerLeft));
         var rule23 = Rule.If(carPosToLine.Is(carFarRight).And(carVel.Is(velStill))).Then(carSteering.Is(steerHardLeft));
         var rule24 = Rule.If(carPosToLine.Is(carFarRight).And(carVel.Is(velRight))).Then(carSteering.Is(steerHardLeft));
         var rule25 = Rule.If(carPosToLine.Is(carFarRight).And(carVel.Is(velFastRight))).Then(carSteering.Is(steerHardLeft));
@@ -137,10 +138,18 @@ public class Fuzzy : MonoBehaviour {
         {
             car.SetSteering((float)result);
         }
-        
-        steeringText.text = ("Steering: " + ((Mathf.Round((float)result * 1000000) / 1000000) * 1000000) + " E-6");
 
+        //steeringText.text = ("Steering: " + ((Mathf.Round((float)result * 1000000) / 1000000) * 1000000) + " E-6");
+        //if (result > -0.005 && result < 0.005)
+        //{
+        //    steeringText.text = ("Steering: 0");
+        //}
+        //else
+        float resultf = (float)result;
+        steeringText.text = ("Steering: " + resultf.ToString("F3"));
+        //}
         
+        //
     }
 
     public void PauseToggle()

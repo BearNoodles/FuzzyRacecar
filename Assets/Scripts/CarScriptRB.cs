@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CarScript : MonoBehaviour {
+public class CarScriptRB : MonoBehaviour
+{
 
 
     float acceleration;
@@ -14,65 +15,50 @@ public class CarScript : MonoBehaviour {
 
     float minPos, maxPos;
 
-    InputField positionField;
-    InputField velocityField;
     Text inputPosition;
     Text inputVelocity;
 
-    public enum Cartype { fuzzy, ruleBased };
-    public Cartype cType;
+    public enum Cartype { fuzzy, ruleBased};
+
+    Cartype cType;
 
     bool isPaused;
 
-	// Use this for initialization
-	void Awake ()
+    // Use this for initialization
+    void Awake()
     {
         velocity = 0;
         acceleration = 0.0f;
-        steeringScale = 3.0f;
+        steeringScale = 0.003f;
         minPos = -1.5f;
         maxPos = 1.5f;
 
-        maxVelocity = 1.5f;
+        maxVelocity = 0.03f;
 
-        if (cType == Cartype.fuzzy)
+        if(cType == Cartype.fuzzy)
         {
             inputPosition = GameObject.FindGameObjectWithTag("FuzzyCarPositionInputText").GetComponent<Text>();
             inputVelocity = GameObject.FindGameObjectWithTag("FuzzyCarVelocityInputText").GetComponent<Text>();
-
-            positionField = GameObject.FindGameObjectWithTag("FuzzyCarPositionInputField").GetComponent<InputField>();
-            velocityField = GameObject.FindGameObjectWithTag("FuzzyVelocityInputField").GetComponent<InputField>();
         }
 
         else
         {
             inputPosition = GameObject.FindGameObjectWithTag("RuleBasedCarPositionInputText").GetComponent<Text>();
-            inputVelocity = GameObject.FindGameObjectWithTag("RuleBasedCarVelocityInputText").GetComponent<Text>();
-
-            positionField = GameObject.FindGameObjectWithTag("RuleBasedCarPositionInputField").GetComponent<InputField>();
-            velocityField = GameObject.FindGameObjectWithTag("RuleBasedVelocityInputField").GetComponent<InputField>();
+            inputVelocity = GameObject.FindGameObjectWithTag("BasedCarVelocityInputText").GetComponent<Text>();
         }
     }
-	
-	// Update is called once per frame
-	void Update ()
+
+    // Update is called once per frame
+    void Update()
     {
+        inputPosition.text = transform.position.x.ToString();
         if (isPaused)
         {
             return;
         }
         UpdatePosition();
-        velocity += acceleration * Time.deltaTime;
-        
-        if(positionField.isFocused == false)
-        {
-            positionField.text = transform.position.x.ToString("F3");
-        }
-        if(velocityField.isFocused == false)
-        {
-            velocityField.text = velocity.ToString("F3");
-        }
-        //
+        velocity += acceleration;
+
         //Debug.Log("velocity " + velocity);
         //Debug.Log("acceleration " + acceleration * 100000);
 
@@ -95,34 +81,34 @@ public class CarScript : MonoBehaviour {
 
     }
 
-    
+
 
     private void UpdatePosition()
     {
 
-        if(transform.position.x < minPos && velocity < 0)
+        if (transform.position.x < minPos && velocity < 0)
         {
             //acceleration = 0;
             velocity = 0;
             return;
         }
-        else if(transform.position.x > maxPos && velocity > 0)
+        else if (transform.position.x > maxPos && velocity > 0)
         {
             //acceleration = 0;
             velocity = 0;
             return;
         }
 
-        if(velocity > maxVelocity)
+        if (velocity > maxVelocity)
         {
             velocity = maxVelocity;
         }
-        
+
         else if (velocity < -maxVelocity)
         {
             velocity = -maxVelocity;
         }
-        Vector2 newPos = new Vector2(transform.position.x + (velocity * Time.deltaTime), transform.position.y);
+        Vector2 newPos = new Vector2(transform.position.x + velocity, transform.position.y);
         transform.position = newPos;
     }
 
@@ -156,8 +142,9 @@ public class CarScript : MonoBehaviour {
 
     public void SetPositionXString()
     {
+        Debug.Log("H");
         float pos;
-        if(inputPosition.text == "")
+        if (inputPosition.text == "")
         {
             pos = 0.0f;
         }
@@ -170,43 +157,25 @@ public class CarScript : MonoBehaviour {
         {
             pos = -1.499f;
         }
-        else if(pos > 1.499f)
+        else if (pos > 1.499f)
         {
             pos = 1.499f;
         }
 
         Vector2 newPos = new Vector2(pos, transform.position.y);
         transform.position = newPos;
-        
-        positionField.text = transform.position.x.ToString("F3");
     }
     public void SetVelocityXString()
     {
         float vel;
-        if (inputVelocity.text == "")
+        if (inputPosition.text == "")
         {
             vel = 0.0f;
         }
         else
         {
-            vel = float.Parse(inputVelocity.text);
-        }
-
-        if (vel <= -maxVelocity)
-        {
-            vel = -maxVelocity + 0.001f;
-        }
-        else if (vel >= maxVelocity)
-        {
-            vel = maxVelocity - 0.001f;
-        }
-
-        if (vel > 0.00001f && vel < 0.00001f)
-        {
-            vel = 0;
+            vel = float.Parse(inputPosition.text);
         }
         velocity = vel;
-        //
-        velocityField.text = velocity.ToString("F3");
     }
 }

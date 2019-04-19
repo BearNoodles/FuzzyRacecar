@@ -1,9 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class RuleBased : MonoBehaviour
 {
+    GameObject carPositionInputField;
+    GameObject linePositionInputField;
+    GameObject velocityInputField;
+    Text steeringText;
 
     CarScript car;
     LineScript line;
@@ -29,15 +34,21 @@ public class RuleBased : MonoBehaviour
         maxCarVel = car.GetMaxVelocity();
         steeringValue = car.GetSteeringScale();
 
-        FarLeftDist = -1.5f;
-        LeftDist = -0.1f;
-        RightDist = 0.1f;
-        FarRightDist = 1.5f;
+        carPositionInputField = GameObject.FindGameObjectWithTag("RuleBasedCarPositionInputField");
+        linePositionInputField = GameObject.FindGameObjectWithTag("RuleBasedLinePositionInputField");
+        velocityInputField = GameObject.FindGameObjectWithTag("RuleBasedVelocityInputField");
+        steeringText = GameObject.FindGameObjectWithTag("RuleBasedSteeringText").GetComponent<Text>();
 
-        FastLeftVel = -1.0f * maxCarVel;
-        LeftVel = -0.05f * maxCarVel;
-        RightVel = 0.05f * maxCarVel;
-        FastRightVel = 1.0f * maxCarVel;
+
+        FarLeftDist = -1.0f;
+        LeftDist = -0.05f;
+        RightDist = 0.05f;
+        FarRightDist = 1.0f;
+
+        FastLeftVel = -0.75f * maxCarVel;
+        LeftVel = -0.25f * maxCarVel;
+        RightVel = 0.25f * maxCarVel;
+        FastRightVel = 0.75f * maxCarVel;
 
         SteerHardLeft = -steeringValue;
         SteerLeft = -0.5f * steeringValue;
@@ -191,6 +202,8 @@ public class RuleBased : MonoBehaviour
         //Debug.Log("result " + result);
 
         car.SetSteering(result);
-        
+
+
+        steeringText.text = ("Steering: " + result.ToString("F3"));
     }
 }
