@@ -33,7 +33,7 @@ public class CarScript : MonoBehaviour {
         minPos = -1.5f;
         maxPos = 1.5f;
 
-        maxVelocity = 1.5f;
+        maxVelocity = 3.0f;
 
         if (cType == Cartype.fuzzy)
         {
@@ -72,26 +72,6 @@ public class CarScript : MonoBehaviour {
         {
             velocityField.text = velocity.ToString("F3");
         }
-        //
-        //Debug.Log("velocity " + velocity);
-        //Debug.Log("acceleration " + acceleration * 100000);
-
-        //if (Input.GetKeyDown(KeyCode.A))
-        //{
-        //    SetSteering(-steeringScale);
-        //}
-        //else if (Input.GetKeyDown(KeyCode.D))
-        //{
-        //    SetSteering(steeringScale);
-        //}
-        //else if (Input.GetKeyUp(KeyCode.A))
-        //{
-        //    SetSteering(0.0f);
-        //}
-        //else if (Input.GetKeyUp(KeyCode.D))
-        //{
-        //    SetSteering(0.0f);
-        //}
 
     }
 
@@ -102,13 +82,11 @@ public class CarScript : MonoBehaviour {
 
         if(transform.position.x < minPos && velocity < 0)
         {
-            //acceleration = 0;
             velocity = 0;
             return;
         }
         else if(transform.position.x > maxPos && velocity > 0)
         {
-            //acceleration = 0;
             velocity = 0;
             return;
         }

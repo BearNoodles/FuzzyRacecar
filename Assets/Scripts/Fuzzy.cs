@@ -29,7 +29,6 @@ public class Fuzzy : MonoBehaviour {
     // Use this for initialization
     void Start ()
     {
-        //car = GameObject.FindGameObjectWithTag("Car").GetComponent<CarScript>();
         car = GetComponent<CarScript>();
         line = GameObject.FindGameObjectWithTag("Line").GetComponent<LineScript>();
         maxCarVel = car.GetMaxVelocity();
@@ -40,11 +39,6 @@ public class Fuzzy : MonoBehaviour {
         linePositionInputField = GameObject.FindGameObjectWithTag("FuzzyLinePositionInputField");
         velocityInputField = GameObject.FindGameObjectWithTag("FuzzyVelocityInputField");
         steeringText = GameObject.FindGameObjectWithTag("FuzzySteeringText").GetComponent<Text>();
-
-        //var linePos = new LinguisticVariable("Line Position");
-        //var left = linePos.MembershipFunctions.AddTrapezoid("Left", 0, 0, 20, 40);
-        //var middle = linePos.MembershipFunctions.AddTriangle("Middle", 30, 50, 70);
-        //var right = linePos.MembershipFunctions.AddTrapezoid("Right", 50, 80, 100, 100);
         
     }
 
@@ -59,21 +53,19 @@ public class Fuzzy : MonoBehaviour {
 
         var carPosToLine = new LinguisticVariable("CarPosition");
         var carFarLeft = carPosToLine.MembershipFunctions.AddTrapezoid("FarLeft", -3.0, -3.0, -1.5, -0.75);
-        var carLeft = carPosToLine.MembershipFunctions.AddTriangle("Left", -1.0, -0.5, 0.0);
-        var carCentre = carPosToLine.MembershipFunctions.AddTriangle("Centre", -1.0, 0.0, 1.0);
-        var carRight = carPosToLine.MembershipFunctions.AddTriangle("Right", 0.0, 0.5, 1.0);
+        var carLeft = carPosToLine.MembershipFunctions.AddTriangle("Left", -1.5, -0.75, 0.0);
+        var carCentre = carPosToLine.MembershipFunctions.AddTriangle("Centre", -0.75, 0.0, 0.75);
+        var carRight = carPosToLine.MembershipFunctions.AddTriangle("Right", 0.0, 0.75, 1.5);
         var carFarRight = carPosToLine.MembershipFunctions.AddTrapezoid("FarRight", 0.75, 1.5, 3.0, 3.0);
-
-        //mems.Add(carPosToLine);
-        //
+        
+        
         var carVel = new LinguisticVariable("CarVelocity");
-        var velFastLeft = carVel.MembershipFunctions.AddTrapezoid("FastLeft", -1.5 * maxCarVel, -1.5 * maxCarVel, -maxCarVel, -0.5 * maxCarVel);
-        var velLeft = carVel.MembershipFunctions.AddTriangle("Left", -maxCarVel, -0.5 * maxCarVel, 0.0);
-        var velStill = carVel.MembershipFunctions.AddTriangle("Still", -0.5 * maxCarVel, 0.0, 0.5 * maxCarVel);
-        var velRight = carVel.MembershipFunctions.AddTriangle("Right", 0.0, 0.5 * maxCarVel, maxCarVel);
-        var velFastRight = carVel.MembershipFunctions.AddTrapezoid("FastRight", 0.5 * maxCarVel, maxCarVel, 1.5 * maxCarVel, 1.5 * maxCarVel);
-
-        //mems.Add(carVel);
+        var velFastLeft = carVel.MembershipFunctions.AddTrapezoid("FastLeft", -maxCarVel, -maxCarVel, -0.5* maxCarVel, -0.25 * maxCarVel);
+        var velLeft = carVel.MembershipFunctions.AddTriangle("Left", -0.5 * maxCarVel, -0.25 * maxCarVel, 0.0);
+        var velStill = carVel.MembershipFunctions.AddTriangle("Still", -0.25 * maxCarVel, 0.0, 0.25 * maxCarVel);
+        var velRight = carVel.MembershipFunctions.AddTriangle("Right", 0.0, 0.25 * maxCarVel, 0.5 * maxCarVel);
+        var velFastRight = carVel.MembershipFunctions.AddTrapezoid("FastRight", 0.25 * maxCarVel, 0.5 * maxCarVel, maxCarVel, maxCarVel);
+        
 
         var carSteering = new LinguisticVariable("CarSteering");
         var steerHardLeft = carSteering.MembershipFunctions.AddTriangle("SteerHardLeft", -steeringValue, -steeringValue, -0.5 * steeringValue);
@@ -81,11 +73,10 @@ public class Fuzzy : MonoBehaviour {
         var noSteering = carSteering.MembershipFunctions.AddTriangle("NoSteering", -0.5 * steeringValue, 0.0, 0.5 * steeringValue);
         var steerRight = carSteering.MembershipFunctions.AddTriangle("SteerRight", 0.0, 0.5 * steeringValue, steeringValue);
         var steerHardRight = carSteering.MembershipFunctions.AddTriangle("SteerHardRight", 0.5 * steeringValue, steeringValue, steeringValue);
+        
 
-        //
-        //IFuzzyEngine fuzzyEngine = new FuzzyEngineFactory().Default();
         fuzzyEngine = new FuzzyEngineFactory().Default();
-        //fuzzyEngine = new FuzzyEngineFactory().Create(new MoMDefuzzification());
+
 
         var rule1 = Rule.If(carPosToLine.Is(carFarLeft).And(carVel.Is(velFastLeft))).Then(carSteering.Is(steerHardRight));
         var rule2 = Rule.If(carPosToLine.Is(carFarLeft).And(carVel.Is(velLeft))).Then(carSteering.Is(steerHardRight));
@@ -127,37 +118,16 @@ public class Fuzzy : MonoBehaviour {
         //Debug.Log("vel " + velocity);
         //Debug.Log("scale " + steeringValue);
         //Debug.Log("maxvel " + maxCarVel);
-
-        //var result = fuzzyEngine.Defuzzify(new { carPosToLine = (double)(carPosX - linePosX), carVel = (double)velocity });
+        
 
         result = fuzzyEngine.Defuzzify(new { CarPosition = dist, CarVelocity = velocity });
 
         //Debug.Log("result " + (double)result);
 
-        if(!isPaused)
-        {
-            car.SetSteering((float)result);
-        }
-
-        //steeringText.text = ("Steering: " + ((Mathf.Round((float)result * 1000000) / 1000000) * 1000000) + " E-6");
-        //if (result > -0.005 && result < 0.005)
-        //{
-        //    steeringText.text = ("Steering: 0");
-        //}
-        //else
+         car.SetSteering((float)result);
+        
         float resultf = (float)result;
         steeringText.text = ("Steering: " + resultf.ToString("F3"));
-        //}
-        
-        //
     }
-
-    public void PauseToggle()
-    {
-        isPaused = !isPaused;
-        //linePositionInputField.SetActive(isPaused);
-        //carPositionInputField.SetActive(isPaused);
-        //velocityInputField.SetActive(isPaused);
-        car.Pause();
-    }
+    
 }

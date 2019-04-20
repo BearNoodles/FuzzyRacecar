@@ -40,20 +40,20 @@ public class RuleBased : MonoBehaviour
         steeringText = GameObject.FindGameObjectWithTag("RuleBasedSteeringText").GetComponent<Text>();
 
 
-        FarLeftDist = -1.0f;
-        LeftDist = -0.05f;
-        RightDist = 0.05f;
-        FarRightDist = 1.0f;
+        FarLeftDist = -1.5f;
+        LeftDist = -0.025f;
+        RightDist = 0.025f;
+        FarRightDist = 1.5f;
 
         FastLeftVel = -0.75f * maxCarVel;
         LeftVel = -0.25f * maxCarVel;
         RightVel = 0.25f * maxCarVel;
         FastRightVel = 0.75f * maxCarVel;
 
-        SteerHardLeft = -steeringValue;
+        SteerHardLeft = -0.75f * steeringValue;
         SteerLeft = -0.5f * steeringValue;
         SteerRight = 0.5f * steeringValue;
-        SteerHardRight = steeringValue;
+        SteerHardRight = 0.75f * steeringValue;
     }
 
     // Update is called once per frame
@@ -98,15 +98,15 @@ public class RuleBased : MonoBehaviour
             }
             else if (velocity < LeftVel)
             {
-                result = SteerHardRight;
+                result = SteerRight;
             }
             else if (velocity > FastRightVel)
             {
-                result = 0;
+                result = SteerLeft;
             }
             else if (velocity > RightVel)
             {
-                result = 0;
+                result = SteerLeft;
             }
             else //Velocity is Zero
             {
@@ -144,11 +144,11 @@ public class RuleBased : MonoBehaviour
         {
             if (velocity < FastLeftVel)
             {
-                result = 0;
+                result = SteerRight;
             }
             else if (velocity < LeftVel)
             {
-                result = 0;
+                result = SteerRight;
             }
             else if (velocity > FastRightVel)
             {
@@ -156,7 +156,7 @@ public class RuleBased : MonoBehaviour
             }
             else if (velocity > RightVel)
             {
-                result = SteerHardLeft;
+                result = SteerLeft;
             }
             else //Velocity is Zero
             {

@@ -1103,7 +1103,6 @@ GameObject:
   - component: {fileID: 768135160}
   - component: {fileID: 768135159}
   - component: {fileID: 768135158}
-  - component: {fileID: 768135157}
   m_Layer: 5
   m_Name: RuleBasedCarPositionInput
   m_TagString: RuleBasedCarPositionInputField
@@ -1131,17 +1130,6 @@ RectTransform:
   m_AnchoredPosition: {x: 25, y: -15}
   m_SizeDelta: {x: 173.09998, y: 58.100006}
   m_Pivot: {x: 1, y: 1}
---- !u!114 &768135157
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 768135155}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5e01e1d7ad419034487b52ab6dc28e4b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &768135158
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1877,7 +1865,6 @@ GameObject:
   - component: {fileID: 1379625739}
   - component: {fileID: 1379625738}
   - component: {fileID: 1379625737}
-  - component: {fileID: 1379625740}
   m_Layer: 5
   m_Name: FuzzyCarPositionInput
   m_TagString: FuzzyCarPositionInputField
@@ -2012,17 +1999,6 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1379625735}
---- !u!114 &1379625740
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1379625735}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5e01e1d7ad419034487b52ab6dc28e4b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1396735433
 GameObject:
   m_ObjectHideFlags: 0
@@ -2643,11 +2619,11 @@ RectTransform:
   m_Father: {fileID: 577608839}
   m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 1}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 25, y: -300}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: 25, y: 60}
   m_SizeDelta: {x: 173.09998, y: 58.100006}
-  m_Pivot: {x: 1, y: 1}
+  m_Pivot: {x: 1, y: 0}
 --- !u!114 &1894492209
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2861,11 +2837,11 @@ RectTransform:
   m_Father: {fileID: 577608839}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 1}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 40, y: -285}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: 40, y: 105}
   m_SizeDelta: {x: 160, y: 30}
-  m_Pivot: {x: 1, y: 1}
+  m_Pivot: {x: 1, y: 0}
 --- !u!114 &2009035985
 MonoBehaviour:
   m_ObjectHideFlags: 0
