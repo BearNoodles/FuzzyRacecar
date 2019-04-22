@@ -5,9 +5,11 @@ using UnityEngine.UI;
 
 public class RuleBased : MonoBehaviour
 {
+    //input fields for clickable text
     GameObject carPositionInputField;
     GameObject linePositionInputField;
     GameObject velocityInputField;
+
     Text steeringText;
 
     CarScript car;
@@ -18,9 +20,11 @@ public class RuleBased : MonoBehaviour
     float steeringValue;
     float maxCarVel;
 
+    //float variable to use as rules
     float FastLeftVel, LeftVel, RightVel, FastRightVel;
     float FarLeftDist, LeftDist, RightDist, FarRightDist;
     float SteerHardLeft, SteerLeft, SteerRight, SteerHardRight;
+
     float dist;
     float result;
 
@@ -28,28 +32,38 @@ public class RuleBased : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        //get the car script component from the car
         car = GetComponent<CarScript>();
+        
+        //get the line script component from the line
         line = GameObject.FindGameObjectWithTag("Line").GetComponent<LineScript>();
 
+        //get max velocity from the car script
         maxCarVel = car.GetMaxVelocity();
+
+        //get the steering scale(acceleration) from the car script
         steeringValue = car.GetSteeringScale();
 
+        //find the input field and text objects that we want to change in the scene and set the mas variables
         carPositionInputField = GameObject.FindGameObjectWithTag("RuleBasedCarPositionInputField");
         linePositionInputField = GameObject.FindGameObjectWithTag("RuleBasedLinePositionInputField");
         velocityInputField = GameObject.FindGameObjectWithTag("RuleBasedVelocityInputField");
         steeringText = GameObject.FindGameObjectWithTag("RuleBasedSteeringText").GetComponent<Text>();
 
-
+        //set specific values for the rules to use
+        //distance variable
         FarLeftDist = -1.5f;
         LeftDist = -0.025f;
         RightDist = 0.025f;
         FarRightDist = 1.5f;
 
+        //velocity variable
         FastLeftVel = -0.75f * maxCarVel;
         LeftVel = -0.25f * maxCarVel;
         RightVel = 0.25f * maxCarVel;
         FastRightVel = 0.75f * maxCarVel;
 
+        //steering output variables
         SteerHardLeft = -0.75f * steeringValue;
         SteerLeft = -0.5f * steeringValue;
         SteerRight = 0.5f * steeringValue;
@@ -59,11 +73,15 @@ public class RuleBased : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //update the position of the line and car and the velocity of the car
         linePosX = line.GetPositionX();
         carPosX = car.GetPositionX();
         velocity = car.GetVelocityX();
+
+        //gives distance car is from line
         dist = carPosX - linePosX;
 
+        //set each rules condition for each variable combination
         //FarLeftRules
         if (dist < FarLeftDist)
         {
@@ -189,21 +207,11 @@ public class RuleBased : MonoBehaviour
             }
         }
         
-
-        //Debug.Log(result);
-        //Debug.Log("linex" + linePosX);
-        //Debug.Log("carx" + carPosX);
-        //Debug.Log("dist " + dist);
-        //Debug.Log("vel " + velocity);
-        //Debug.Log("scale " + steeringValue);
-        //Debug.Log("maxvel " + maxCarVel);
         
-
-        //Debug.Log("result " + result);
-
+        //set car steering as the result returned by the rules
         car.SetSteering(result);
 
-
+        //set steering text to display the result
         steeringText.text = ("Steering: " + result.ToString("F3"));
     }
 }
