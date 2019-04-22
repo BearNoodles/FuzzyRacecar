@@ -104,7 +104,7 @@ public class Fuzzy : MonoBehaviour {
 
         var rule21 = Rule.If(carPosToLine.Is(carFarRight).And(carVel.Is(velFastLeft))).Then(carSteering.Is(steerLeft));
         var rule22 = Rule.If(carPosToLine.Is(carFarRight).And(carVel.Is(velLeft))).Then(carSteering.Is(steerLeft));
-        var rule23 = Rule.If(carPosToLine.Is(carFarRight).And(carVel.Is(velStill))).Then(carSteering.Is(steerHardLeft));
+        var rule23 = Rule.If(carPosToLine.Is(carFarRight).And(carVel.Is(velStill))).Then(carSteering.Is(steerLeft));
         var rule24 = Rule.If(carPosToLine.Is(carFarRight).And(carVel.Is(velRight))).Then(carSteering.Is(steerHardLeft));
         var rule25 = Rule.If(carPosToLine.Is(carFarRight).And(carVel.Is(velFastRight))).Then(carSteering.Is(steerHardLeft));
 
